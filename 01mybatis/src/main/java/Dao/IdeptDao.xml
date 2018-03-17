@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="Dao.IdeptDao">
+    <!--
+    eviction LRU
+    flushInterval 不设置 一直有效
+    size 存储多少条数据  默认1024
+    readOnly 只读
+    -->
+    <cache type="org.mybatis.caches.ehcache.EhcacheCache"/>
+    <!--一对多单条SQL-->
+    <resultMap id="deptMapper" type="dept">
+        <result property="deptName" column="deptname"></result>
+        <collection property="emps" ofType="emp">
+            <id property="empNo" column="empno"></id>
+            <result column="empname" property="empName"></result>
+        </collection>
+    </resultMap>
+    
+    <select id="findAlldeptName" resultMap="deptMapper">
+      SELECT deptName,empName FROM dept,emp WHERE dept.`deptNo`=emp.`deptNo` AND dept.`deptNo`=#{deptNo}
+    </select>
+
+    <!--一对多多条SQL-->
+    <resultMap id="deptMappers" type="dept">
+        <id property="deptNo" column="deptno"></id>
+        <result property="deptName" column="deptname"></result>
+        <collection property="emps" ofType="emp" select="empselect" column="deptNo">
+    </collection>
+</resultMap>
+
+    <select id="empselect" resultType="emp">
+        SELECT * from emp where deptNo=#{deptNo}
+    </select>
+
+    <select id="findAllMoreDeptName" resultMap="deptMappers">
+        select * from dept where deptNo=#{deptNo}
+    </select>
+
+    <!--多对一单条SQL-->
+    <resultMap id="empMapper" type="emp">
+        <id property="empNo" column="empno"></id>
+        <result property="empName" column="empname"></result>
+        <association property="depts" javaType="dept" >
+            <id property="deptNo" column="deptno"></id>
+            <result property="deptName" column="deptname"></result>
+        </association>
+    </resultMap>
+<select id="findAllemp" resultMap="empMapper">
+  SELECT deptName,empName,empno,emp.deptNo FROM dept,emp WHERE dept.deptNo=emp.deptNo AND empNo=#{empNo}
+</select>
+
+
+    <!--多对一多条SQL-->
+    <resultMap id="empMappers" type="emp">
+        <id property="empNo" column="empno"></id>
+        <result property="empName" column="empname"></result>
+        <association property="depts" javaType="dept" select="getdept" column="deptNo" >
+        </association>
+    </resultMap>
+    <select id="getdept" resultType="dept">
+        SELECT * from dept where deptNo=#{deptNo}
+    </select>
+    <select id="findAllemps" resultMap="empMappers">
+        SELECT * from emp where empNo=#{empNo}
+    </select>
+
+    <!--根据老师编号查询学生集合-->
+    <resultMap id="TeacherMapper" type="Teacher">
+        <id property="tid" column="tid"></id>
+        <result property="tname" column="tname"></result>
+        <collection property="stu" ofType="Student">
+            <id property="sid" column="sid"></id>
+            <result property="sname" column="sname"></result>
+        </collection>
+    </resultMap>
+    <select id="findAllStudent" resultMap="TeacherMapper">
+        SELECT * FROM students AS s,teacher AS t,Teacher_Student AS ts
+        WHERE s.`sid`=ts.`sid` AND t.`tid`=ts.`tid` AND t.`tid`=#{tid}
+    </select>
+
+    <!--自关联-->
+    <resultMap id="categoryMapper" type="category">
+        <id property="cid" column="cid"></id>
+        <result property="cname" column="cname"></result>
+        <collection property="sets" ofType="category" select="findAllById" column="cid">
+        </collection>
+    </resultMap>
+    <select id="findAllById" resultMap="categoryMapper">
+        select * from category where pid=#{pid}
+    </select>
+
+    <!--增加-->
+    <insert id="add">
+    insert into dept(deptName) VALUES (#{deptName})
+</insert>
+
+</mapper>

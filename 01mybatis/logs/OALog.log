@@ -1,0 +1,9 @@
+2018-03-05 10:08:08.245 DEBUG [main]Dao.IBookDao.foreachArray.debug:145 -==>  Preparing: SELECT * from book WHERE bookId IN ( ? , ? ) 
+2018-03-05 10:08:08.284 DEBUG [main]Dao.IBookDao.foreachArray.debug:145 -==> Parameters: 1(Integer), 3(Integer)
+2018-03-05 10:08:08.472 DEBUG [main]Dao.IBookDao.foreachArray.debug:145 -<==      Total: 2
+2018-03-05 10:08:23.093 DEBUG [main]Dao.IBookDao.foreachArrayList.debug:145 -==>  Preparing: SELECT * from book WHERE bookId IN ( ? , ? ) 
+2018-03-05 10:08:23.115 DEBUG [main]Dao.IBookDao.foreachArrayList.debug:145 -==> Parameters: 1(Integer), 2(Integer)
+2018-03-05 10:08:23.133 DEBUG [main]Dao.IBookDao.foreachArrayList.debug:145 -<==      Total: 2
+2018-03-05 10:08:41.012 DEBUG [main]Dao.IBookDao.foreachArrayBook.debug:145 -==>  Preparing: SELECT * from book WHERE bookId IN ( ? , ? ) 
+2018-03-05 10:08:41.038 DEBUG [main]Dao.IBookDao.foreachArrayBook.debug:145 -==> Parameters: 3(Integer), 2(Integer)
+2018-03-05 10:08:41.056 DEBUG [main]Dao.IBookDao.foreachArrayBook.debug:145 -<==      Total: 2

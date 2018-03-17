@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="Dao.IBookDao">
+<!--解决实体类和数据库中的列名冲突的问题-->
+    <resultMap id="myBook" type="book">
+        <id property="bookId" column="bookId"></id>
+    </resultMap>
+
+    <!--查询全部-->
+    <select id="finallbooks"  resultMap="myBook" >
+        select * from book
+    </select>
+
+<!--根据图书编号查询对应该编号的图书-->
+    <select id="bookname" resultMap="myBook">
+      select * from book where bookAuther=#{bookAuther}
+    </select>
+
+
+    <!--如何替代*号-->
+<!--  <sql id="myid">
+        /*列名*/
+        bookname,bookid,bookprice,bookauther
+    </sql>-->
+
+    <select id="likeSelect" resultType="book">
+        /*第一种可以防止SQL注入的问题，更倾向于这种写法*/
+       /SELECT  * from book where bookName like '%' #{ value} '%'
+/*不能防止SQL注入*/
+     /*   select * from book where bookname like concat('%',#{bookname},'%')*/
+/*可以防止SQL注入*/
+     /*   select * from book where bookname like '%${value}%'*/
+    </select>
+
+   <insert id="addbook">
+        insert  into book(bookName,bookAuther,bookprice) values(#{bookName},#{bookAuther},#{bookprice})
+        <selectKey resultType="int" keyProperty="bookId">
+            SELECT @@IDENTITY
+        </selectKey>
+    </insert>
+
+    <!--多条件查询-->
+    <select id="selectMultMap" resultMap="myBook">
+        select * from book where bookName like '%' #{bookName} '%' and bookprice>#{bookprice}
+    </select>
+
+
+    <!--多条件索引查询-->
+    <select id="selectMultIndex" resultMap="myBook">
+        select * from book where bookName like '%' #{0} '%' and bookprice>#{1}
+    </select>
+
+    <select id="selectIf" resultMap="myBook">
+    SELECT * from book
+    <where>
+        <if test="bookName!=null">
+            and bookName like '%' #{bookName} '%'
+        </if>
+        <if test="bookprice!=null">
+            and bookprice>#{bookprice}
+        </if>
+    </where>
+</select>
+    <!--<delete id="deletebook">
+    delete from book where bookId=#{bookId}
+    </delete>-->
+    <!--数组-->
+    <select id="foreachArray" resultMap="myBook">
+        SELECT * from book
+        <where>
+           bookId IN
+            <foreach collection="array" open="(" close=")" separator="," item="myid">
+                #{myid}
+            </foreach>
+        </where>
+    </select>
+    <!--List集合-->
+    <select id="foreachArrayList" resultMap="myBook">
+        SELECT * from book
+        <where>
+            bookId IN
+            <foreach collection="list" open="(" close=")" separator="," item="myid">
+                #{myid}
+            </foreach>
+        </where>
+    </select>
+    <!--自定义类型的List集合-->
+    <select id="foreachArrayBook" resultMap="myBook">
+        SELECT * from book
+        <where>
+            bookId IN
+            <foreach collection="list" open="(" close=")" separator="," item="books">
+                #{books.bookId}
+            </foreach>
+        </where>
+    </select>
+
+</mapper>

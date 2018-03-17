@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <!--用properties文件来链接数据库-->
+ <properties resource="jdbc.properties"></properties>
+
+   <settings>
+        <setting name="autoMappingBehavior" value="FULL"/>
+       <!--延迟加载是否开启-->
+       <!-- true false 深度延迟加载-->
+       <!--true true 侵入式延迟加载 -->
+       <!--false true 直接加载-->
+       <setting name="lazyLoadingEnabled" value="true"></setting>
+       <setting name="aggressiveLazyLoading" value="false"></setting>
+       <!--一级缓存
+       只能在一个线程之间使用数据，当sqlsession一旦关闭之后，缓存中的数据就会消失
+       增删改对一级缓存的影响
+      增删改操作会将一级缓存清空
+       -->
+       <!--二级缓存-->
+       <!--二级缓存 默认是开启的  true
+          一旦开启
+          可以在多个线程之间共享数据  相同的SQL语句在二次查询是直接从缓存中读取，sqlsession关闭后，也可以共享数据-->
+       <setting name="cacheEnabled" value="true"></setting>
+    </settings>
+    <typeAliases>
+
+        <package name="entity"></package>
+    </typeAliases>
+    <environments default="development">
+        <environment id="development">
+            <transactionManager type="JDBC"/>
+            <dataSource type="POOLED">
+                <!--pooled
+                    unpooled
+                    jndi
+                -->
+                <property name="driver" value="${jdbc.driver}"/>
+                <property name="url" value="${jdbc.url}"/>
+                <property name="username" value="${jdbc.username}"/>
+                <property name="password" value="${jdbc.password}"/>
+            </dataSource>
+        </environment>
+    </environments>
+    <mappers>
+        <mapper resource="Dao/IBookDao.xml"/>
+        <mapper resource="Dao/IdeptDao.xml"/>
+    </mappers>
+</configuration>
