@@ -4,4 +4,25 @@
 
 <web-app>
   <display-name>Archetype Created Web Application</display-name>
+    
+    <context-param>
+        <param-name>contextConfigLocation</param-name>
+        <param-value>classpath:applicationContextSpringMybatis.xml</param-value>
+    </context-param>
+    
+    <listener>
+        <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+    </listener>
+    
+    <servlet>
+        <servlet-name>IBookServlet</servlet-name>
+        <servlet-class>Servlet.IBookServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>IBookServlet</servlet-name>
+        <url-pattern>/IBookServlet</url-pattern>
+    </servlet-mapping>
+    <welcome-file-list>
+        <welcome-file>addbook.jsp</welcome-file>
+    </welcome-file-list>
 </web-app>
