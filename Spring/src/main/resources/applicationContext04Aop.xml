@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+
+    <bean id="dao" class="Dao.IHelloDaoImpl"></bean>
+    <bean id="service" class="service.IHelloServiceImpl">
+        <property name="dao" ref="dao"></property>
+    </bean>
+
+    <bean id="before" class="Before.LoggerBefore"></bean>
+    <aop:config>
+        <!--<aop:pointcut id="mypoint" expression="execution(* *.service.*(..))"></aop:pointcut>-->
+        <aop:pointcut id="mypoint" expression="execution(* service.*.*(..))"></aop:pointcut>
+        <aop:advisor advice-ref="before" pointcut-ref="mypoint"></aop:advisor>
+    </aop:config>
+
+</beans>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  xmlns:p="http://www.springframework.org/schema/p"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+
+    <bean id="cars" class="happy.Car">
+    <property name="color" value="蓝色"></property>
+    <property name="brand" value="布加迪威龙"></property>
+</bean>
+
+    <!--自动配置   这里急不需要用ref来引入上边所写的bean节点   设置bean节点的属性为autowire-->
+    <bean id="student" class="happy.Student" autowire="byType">
+        <property name="name" value="李四"></property>
+        <property name="age" value="20"></property>
+    </bean>
+
+
+<!--
+P命名空间赋值
+-->
+  <!--<bean id="Student" class="happy.Student" p:name="张毅" p:age="18" p:car-ref="cars">
+  </bean>
+-->
+
+
+</beans>

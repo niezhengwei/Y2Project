@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+">
+<!--目标类型-->
+    <bean id="service" class="day01.SomeBeforeImpl"></bean>
+<!--增强通知-->
+    <bean id="beforeadvice" class="day01.BeforeTest"></bean>
+
+    <!--顾问包装通知   正则方法切面顾问-->
+    <bean id="services" class="org.springframework.aop.support.RegexpMethodPointcutAdvisor">
+        <property name="advice" ref="beforeadvice"></property>
+        <property name="patterns" value=".*do.*"></property>
+    </bean>
+<!--代理工厂bean 自己也是bean  中和调度目标类型和增强-->
+    <bean id="advisors" class="org.springframework.aop.framework.ProxyFactoryBean">
+        <property name="target" ref="service"></property>
+        <property name="interceptorNames" value="services"></property>
+    </bean>
+
+
+
+</beans>

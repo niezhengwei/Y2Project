@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  xmlns:p="http://www.springframework.org/schema/p"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+<bean  id="mycollection" class="MyCollection.collection" scope="prototype">
+    <property name="array">
+        <array>
+            <value>青鸟杯</value>
+            <value>世界杯</value>
+            <value>苹果派</value>
+        </array>
+    </property>
+
+    <property name="list">
+    <list>
+        <value>程序员</value>
+        <value>分析师</value>
+        <value>架构师</value>
+    </list>
+</property>
+
+    <property name="set">
+        <set>
+            <value>李白</value>
+            <value>韩信</value>
+            <value>妲己</value>
+        </set>
+    </property>
+
+    <property name="map">
+        <map>
+        <entry key="Y2167">
+            <value>面试题</value>
+        </entry>
+            <entry key="Y2166">
+                <value>青鸟杯</value>
+            </entry>
+            <entry key="S2229">
+                <value>多线程</value>
+            </entry>
+        </map>
+    </property>
+
+    <property name="properties">
+        <props>
+            <prop key="1">第一名</prop>
+            <prop key="2">第二名</prop>
+            <prop key="3">第三名</prop>
+        </props>
+    </property>
+</bean>
+
+
+
+</beans>

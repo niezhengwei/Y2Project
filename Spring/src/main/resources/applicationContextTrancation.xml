@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/aop  http://www.springframework.org/schema/aop/spring-aop.xsd
+        http://www.springframework.org/schema/context   http://www.springframework.org/schema/context/spring-context.xsd
+ http://www.springframework.org/schema/tx   http://www.springframework.org/schema/tx/spring-tx.xsd">
+
+
+
+    <bean id="dataSources" class="com.alibaba.druid.pool.DruidDataSource">
+        <property name="driverClassName" value="${jdbc.driver}"></property>
+        <property name="url" value="${jdbc.url}"></property>
+        <property name="username" value="${jdbc.username}"></property>
+        <property name="password" value="${jdbc.password}"></property>
+    </bean>
+
+    <!--识别到properties文件  两种配置方式  -->
+    <!--配置一-->
+    <context:property-placeholder location="classpath:jdbc.properties"></context:property-placeholder>
+    <!--Dao -->
+    <bean id="accountDaos" class="Dao.AccountDaoImpl">
+       <property name="dataSource" ref="dataSources"></property>
+    </bean>
+    <bean id="stockDaos" class="Dao.IStockDaoImpl">
+        <property name="dataSource" ref="dataSources"></property>
+    </bean>
+
+    <!--service-->
+    <bean id="accountService" class="Service.IAccountServiceImpl">
+       <property name="accountDao" ref="accountDaos"></property>
+        <property name="stockDao" ref="stockDaos"></property>
+    </bean>
+
+<!--事务管理器-->
+    <bean id="transactionManagers" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+    <property name="dataSource" ref="dataSources"></property>
+    </bean>
+
+    <!--事务代理工厂-->
+ <!--   <bean class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+        <property name="transactionManager" ref="transactionManagers"></property>
+        <property name="target" ref="accountService"></property>
+        <property name="transactionAttributes">
+            <props >
+                <prop key="addStock" >ISOLATION_DEFAULT,PROPAGATION_REQUIRED</prop>
+            </props>
+        </property>
+    </bean>-->
+
+    <!--注解事务-->
+   <!-- <tx:annotation-driven transaction-manager="transactionManagers"></tx:annotation-driven>-->
+
+    <!--AspectJ  AOP 形成事务  -->
+    <tx:advice id="txadvice" transaction-manager="transactionManagers">
+        <tx:attributes>
+            <tx:method name="updateService" isolation="DEFAULT" propagation="REQUIRED" rollback-for="StockExcpetion"/>
+        </tx:attributes>
+    </tx:advice>
+
+    <aop:config>
+        <aop:pointcut id="mypoint" expression="execution(* Service.IAccountServiceImpl.*(..))"></aop:pointcut>
+        <aop:advisor advice-ref="txadvice" pointcut-ref="mypoint"></aop:advisor>
+    </aop:config>
+</beans>

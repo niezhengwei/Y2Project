@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+<!--目标类型-->
+    <bean id="service" class="DamoAspectXml.SomeBeforeImpl"></bean>
+
+<!--增强通知-->
+    <bean id="beforeadvice" class="DamoAspectXml.AspectAdvice"></bean>
+
+
+    <!--aspect xml 版本-->
+    <aop:config>
+        <aop:pointcut id="mypoint" expression="execution(* DamoAspectXml.*.*(..))"></aop:pointcut>
+        <aop:aspect ref="beforeadvice">
+            <aop:before method="myBefore" pointcut-ref="mypoint"></aop:before>
+            <!--<aop:after-returning method="afterReturing" pointcut-ref="mypoint"></aop:after-returning>-->
+        </aop:aspect>
+    </aop:config>
+
+
+</beans>
