@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:tx="http://www.springframework.org/schema/tx" xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/aop  http://www.springframework.org/schema/aop/spring-aop.xsd
+        http://www.springframework.org/schema/context   http://www.springframework.org/schema/context/spring-context.xsd
+ http://www.springframework.org/schema/tx   http://www.springframework.org/schema/tx/spring-tx.xsd http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+<!--包扫描器-->
+    <context:component-scan base-package="cn.leon"></context:component-scan>
+
+    <!--视图解析器-->
+    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="prefix" value="/"></property>
+        <property name="suffix" value=".jsp"></property>
+    </bean>
+    <!--配置二数据源 DBCP-->
+     <bean id="dataSources" class="org.apache.commons.dbcp.BasicDataSource">
+         <property name="driverClassName" value="${jdbc.driver}"></property>
+         <property name="url" value="${jdbc.url}"></property>
+         <property name="username" value="${jdbc.username}"></property>
+         <property name="password" value="${jdbc.password}"></property>
+     </bean>
+
+    <!--配置识别到properties一-->
+    <context:property-placeholder location="classpath:jdbc.properties"></context:property-placeholder>
+
+
+
+    <!--识别到Mybatis配置-->
+    <bean class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="dataSources"></property>
+        <property name="configLocation" value="classpath:mybatis-config.xml"></property>
+       <!-- <property name="typeAliasesPackage" value="cn.studio.entity" />
+        &lt;!&ndash; 配置mybatis分页插件PageHelper &ndash;&gt;
+        <property name="plugins">
+            <array>
+                <bean class="com.github.pagehelper.PageInterceptor">
+                    <property name="properties">
+                        &lt;!&ndash; 什么都不配，使用默认的配置 &ndash;&gt;
+                        <value></value>
+                    </property>
+                </bean>
+            </array>
+        </property>-->
+
+    </bean>
+
+    <!--dao -->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+       <property name="basePackage" value="cn.leon.dao"></property>
+    </bean>
+
+    <!--事务管理器-->
+    <bean id="transactionManagers" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+    <property name="dataSource" ref="dataSources"></property>
+    </bean>
+
+    <!--验证器-->
+    <bean id="myValidator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean">
+        <property name="providerClass" value="org.hibernate.validator.HibernateValidator"></property>
+    </bean>
+    <!--注解驱动-->
+    <mvc:annotation-driven validator="myValidator"></mvc:annotation-driven>
+    <!--注解事务-->
+    <tx:annotation-driven transaction-manager="transactionManagers"></tx:annotation-driven>
+
+    <!-- 设置上传文件最大值   1M=1*1024*1024(B)=1048576 bytes -->
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <property name="maxUploadSize" value="1048576000" />
+    </bean>
+
+
+</beans>

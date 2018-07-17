@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.leon.dao.IQuestionDAO">
+
+<select id="findAll" resultMap="mappers">
+    SELECT * FROM questions ORDER BY lastTime DESC
+</select>
+
+    <insert id="AddQuestion">
+        INSERT INTO questions(title,detailDesc,answerCount,lastTime)VALUES(#{title},#{detailDesc},#{answerCount},#{lastTime})
+    </insert>
+    
+    <select id="findAllId" resultMap="mappers">
+        SELECT * from questions where id=#{qid}
+    </select>
+
+    <select id="findAllAnswer" resultType="Answers">
+        SELECT ansContent,ansDate from answers where qid=#{id}
+    </select>
+
+    <resultMap id="mappers" type="Questions">
+        <id column="id" property="id"></id>
+        <result column="title" property="title"></result>
+        <result column="detailDesc" property="detailDesc"></result>
+        <result column="answerCount" property="answerCount"></result>
+        <result column="lastTime" property="lastTime"></result>
+        <collection property="lists" ofType="Answers" select="findAllAnswer"  column="id"></collection>
+    </resultMap>
+
+    <insert id="addAnswer">
+        insert into answers(ansContent,ansDate,qid)VALUES (#{0},#{1},#{2})
+    </insert>
+
+</mapper>
