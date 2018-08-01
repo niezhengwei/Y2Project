@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+
+<hibernate-mapping package="cn.happy.hibernate.entity">
+
+   <class name="Emp">
+       <id name="empId" column="empId">
+           <generator class="assigned"></generator>
+       </id>
+       <property name="name"></property>
+       <property name="sal"></property>
+       <property name="job"></property>
+
+
+       <many-to-one name="dept" column="deptNo" class="Dept"></many-to-one>
+   </class>
+
+    <!--全部  hql查询-->
+    <query name="getAllEmps">
+        <![CDATA[
+                from Emp
+        ]]>
+    </query>
+    <!--全部  SQL查询-->
+    <sql-query name="getAllEmpsSql">
+        <![CDATA[
+               select * from Emp
+        ]]>
+    </sql-query>
+    <!--查询返回指定id的数据-->
+    <sql-query name="getAllEmpsSqlId">
+        <![CDATA[
+               select * from Emp where empId=:id
+        ]]>
+    </sql-query>
+    <!--查询返回一个对象-->
+    <sql-query name="getAllEmpsSqlIdEmp">
+        <return-scalar column="empId"></return-scalar>
+        <return-scalar column="name"></return-scalar>
+        <return-scalar column="sal"></return-scalar>
+        <return-scalar column="job"></return-scalar>
+        <![CDATA[
+               select empId,name,sal,job from Emp where empId=:id
+        ]]>
+
+    </sql-query>
+</hibernate-mapping>
