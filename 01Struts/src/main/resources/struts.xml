@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+        "http://struts.apache.org/dtds/struts-2.3.dtd">
+<struts>
+    <package name="default" namespace="/" extends="struts-default">
+        <action name="helloaction1" class="cn.leon.First.HelloAction1" method="execute">
+            <result name="success">/success.jsp</result>
+        </action>
+        <action name="helloaction2" class="cn.leon.First.HelloAction2" method="execute">
+            <result name="success">/success.jsp</result>
+        </action>
+        <action name="helloaction3" class="cn.leon.First.HelloAction3" method="execute">
+            <result name="success">/success.jsp</result>
+        </action>
+    </package>
+
+<!--开启动态方法的调用-->
+    <constant name="struts.enable.DynamicMethodInvocation" value="true"></constant>
+<!--动态方法传递参数-->
+    <package name="a" namespace="/user" extends="struts-default">
+      <!--  <action name="users" class="cn.leon.First.ActionInfo">
+            <result>/success.jsp</result>
+        </action>-->
+        <!--通配符使用-->
+        <action name="*_*" class="cn.leon.First.{1}" method="{2}">
+            <result>/success.jsp</result>
+        </action>
+        
+        <action name="clickData" class="cn.leon.First.ActionInfo" method="login1">
+            <result>/success.jsp</result>
+        </action>
+    </package>
+
+
+    <package name="c" namespace="/user" extends="struts-default">
+        
+        <action name="upload" class="cn.leon.First.UploadAction" method="uploads">
+            <result>/success.jsp</result>
+        </action>
+    </package>
+
+
+
+
+
+
+</struts>
